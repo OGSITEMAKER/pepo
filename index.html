@@ -1,0 +1,501 @@
+<!-- HTML5 document declaration -->
+<!doctype html>
+<!-- Root HTML element with language set to English -->
+<html lang="en">
+<!-- Document head containing metadata, title, and styles -->
+<head>
+  <!-- Character encoding set to UTF-8 for proper text rendering -->
+  <meta charset="utf-8" />
+  <!-- Responsive viewport meta tag for mobile compatibility -->
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Page title displayed in the browser tab -->
+  <title>Happy Birthday — A Little Love</title>
+  <!-- Inline CSS styles for the page layout and design -->
+  <style>
+    /* ---------- Basic reset & layout ---------- */
+    :root{
+      --bg: #fff0f6;
+      --card:#fff;
+      --accent:#ff6b9a;
+      --accent2:#ff9ac2;
+      --muted:#8b6b7a;
+      font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#fff6f8);}
+    .container{max-width:980px;margin:24px auto;padding:24px}
+
+    /* ---------- Header ---------- */
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;box-shadow:0 8px 30px rgba(255,107,154,0.15)}
+    h1{margin:0;font-size:20px;color:#5a2b3a}
+    p.sub{margin:0;color:var(--muted);font-size:13px}
+
+    /* ---------- Cute floating hearts ---------- */
+    .hearts{position:fixed;left:0;top:0;pointer-events:none;width:100%;height:100%;overflow:hidden}
+    .heart{position:absolute;width:18px;height:18px;background:var(--accent);transform:rotate(45deg);border-radius:4px 0 0 0;opacity:0.9}
+    .heart:before,.heart:after{content:'';position:absolute;width:18px;height:18px;background:inherit;border-radius:50%}
+    .heart:before{top:-9px;left:0}
+    .heart:after{left:-9px;top:0}
+
+    /* ---------- Hero / Card ---------- */
+    .hero{background:linear-gradient(180deg,rgba(255,255,255,0.85),rgba(255,255,255,0.9));border-radius:18px;padding:28px;margin-top:18px;box-shadow:0 10px 30px rgba(110,40,70,0.06);display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:center}
+    @media(max-width:880px){.hero{grid-template-columns:1fr}}
+
+    /* left column (letter + controls) */
+    .letter-wrap{min-height:260px}
+    .card-title{font-size:18px;margin:0 0 8px 0;color:#6a2c41}
+    .typed{font-size:16px;line-height:1.6;color:#4b2430;white-space:pre-wrap;min-height:120px}
+    .cursor{display:inline-block;width:2px;background:#4b2430;margin-left:6px;animation:blink 1s steps(2) infinite}
+    @keyframes blink{50%{opacity:0}}
+
+    .controls{margin-top:12px;display:flex;gap:10px}
+    .btn{background:var(--accent);color:white;padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(255,107,154,0.14)}
+    .btn.ghost{background:transparent;color:var(--accent);box-shadow:none;border:1px solid rgba(255,107,154,0.18)}
+
+    /* right column (photo card) */
+    .photo-card{background:linear-gradient(180deg,#fff,#fff6fb);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:10px;align-items:center}
+    .photo-card img{width:100%;height:220px;object-fit:cover;border-radius:10px}
+    .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%}
+    .gallery-grid img{width:100%;height:72px;object-fit:cover;border-radius:8px;cursor:pointer}
+
+    /* ---------- Gallery modal ---------- */
+    .modal{position:fixed;inset:0;background:rgba(10,6,10,0.6);display:flex;align-items:center;justify-content:center;padding:24px;z-index:60;visibility:hidden;opacity:0;transition:all .18s}
+    .modal.open{visibility:visible;opacity:1}
+    .modal .panel{max-width:920px;width:100%;border-radius:14px;padding:14px;background:linear-gradient(180deg,#fff,#ffeef5);}
+    .modal img{width:100%;height:auto;border-radius:10px}
+    .close-x{position:absolute;right:20px;top:20px;background:#fff;padding:8px;border-radius:50%;cursor:pointer}
+
+    /* ---------- Scrolling sections ---------- */
+    section{margin-top:26px}
+
+    /* ---------- Photo gallery full ---------- */
+    .full-gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    @media(max-width:720px){.full-gallery{grid-template-columns:repeat(2,1fr)}}
+    .full-gallery img{width:100%;height:180px;object-fit:cover;border-radius:12px;cursor:pointer}
+    .large-photo{grid-column:span 2;height:220px}
+
+    /* ---------- Video area ---------- */
+    .video-wrap{margin-top:12px;border-radius:12px;overflow:hidden;box-shadow:0 12px 30px rgba(100,30,50,0.08);position:relative}
+    .video-wrap video{width:100%;height:auto;display:block}
+    .video-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .play-big{pointer-events:auto;background:linear-gradient(90deg,var(--accent),var(--accent2));padding:14px;border-radius:50%;box-shadow:0 8px 30px rgba(255,107,154,0.2);cursor:pointer}
+
+    /* ---------- Footer ---------- */
+    footer{margin-top:26px;text-align:center;color:var(--muted)}
+
+    /* ---------- small helpers ---------- */
+    .muted{color:var(--muted);font-size:14px}
+    .center{text-align:center}
+
+    /* ---------- Ribbon Animation ---------- */
+    .ribbon{position:fixed;inset:0;background:linear-gradient(180deg,var(--bg),#fff6f8);display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;color:#5a2b3a;font-size:28px;font-weight:700;text-align:center;z-index:100;transform:translateY(0);transition:transform 1s ease-out;cursor:pointer}
+    .ribbon.hidden{transform:translateY(-100%)}
+    .container{opacity:0;pointer-events:none;transition:opacity 1s ease-out 0.5s}
+    .container.visible{opacity:1;pointer-events:auto}
+  </style>
+</head>
+<!-- Document body containing the visible content -->
+<body>
+  <!-- Ribbon overlay -->
+  <div class="ribbon" id="ribbon">
+    <div>
+      <div style="font-size:36px;margin-bottom:8px;">♥♥♥</div>
+      <div>Click to Open Birthday surprise!</div>
+      <div style="font-size:36px;margin-bottom:8px;">♥♥♥</div>
+    </div>
+  </div>
+  <!-- Container for floating hearts animation -->
+  <div class="hearts" aria-hidden="true"></div>
+  <!-- Main content wrapper -->
+  <div class="container">
+    <!-- Site header with brand logo and information -->
+    <header>
+      <div class="brand">
+        <!-- Logo element with heart symbol -->
+        <div class="logo">❤</div>
+        <div>
+          <!-- Main heading for the page -->
+          <h1>Happy Birthday my Cutie-pie</h1>
+          <!-- Subtitle with date and description -->
+          <p class="sub">A tiny site made with love — 14th June</p>
+        </div>
+      </div>
+      <!-- Centered text indicating the creator -->
+      <div class="center">
+        <small class="muted">Made for Pepo❤️ • birthday surprise</small>
+      </div>
+    </header>
+
+    <!-- Main hero section with letter and photo card -->
+    <main class="hero">
+      <!-- Left column containing the typed letter and controls -->
+      <div class="letter-wrap">
+        <!-- Title for the letter section -->
+        <h2 class="card-title">A letter for her</h2>
+        <!-- Container for the typing animation text -->
+        <div id="typed" class="typed" aria-live="polite"></div><span id="cursor" class="cursor"></span>
+
+        <!-- Control buttons for typing animation -->
+        <div class="controls">
+          <button id="startBtn" class="btn">Start Typing</button>
+          <button id="pauseBtn" class="btn ghost">Pause</button>
+          <button id="replayBtn" class="btn ghost">Replay</button>
+        </div>
+      </div>
+
+      <!-- Right column with photo card and gallery thumbnails -->
+      <aside class="photo-card">
+        <!-- Main thumbnail image -->
+        <img id="mainThumb" src="photos/pic1.jpeg" alt="Cute photo" />
+        <!-- Grid of thumbnail images -->
+        <div class="gallery-grid" id="sideGallery">
+          <img src="photos/pic2.jpeg" alt="1" data-full="./images/photo1.jpg" />
+          <img src="photos/pic3.jpeg" alt="2" data-full="./images/photo2.jpg" />
+          <img src="photos/pic4.jpeg" alt="3" data-full="./images/photo3.jpg" />
+        </div>
+
+      </aside>
+    </main>
+
+    <!-- Section for photo gallery -->
+    <section>
+      <!-- Title for the gallery section -->
+      <h2 class="card-title">Memories — photo gallery</h2>
+      <!-- Grid of full-size gallery images -->
+      <div class="full-gallery" id="fullGallery">
+        <!-- Replace these with your photos. Keep names or update the srcs. -->
+        <img src="photos/pic5.jpeg" alt="mem1" data-full="./images/photo1.jpg" >
+        <img src="photos/pic6.jpeg" alt="mem2" data-full="./images/photo2.jpg" >
+        <img src="photos/pic7.jpeg" alt="mem3" data-full="./images/photo3.jpg">
+        <img src="photos/pic8.jpeg" alt="mem4" data-full="./images/photo4.jpg">
+        <img src="photos/pic9.jpeg" alt="mem5" data-full="./images/photo5.jpg">
+        <img src="photos/pic10.jpeg" alt="mem6" data-full="./images/photo6.jpg">
+        <img src="photos/pic11.jpeg" alt="mem6" data-full="./images/photo6.jpg">
+        <img src="photos/pic12.jpeg" alt="mem6" data-full="./images/photo6.jpg">
+      </div>
+    </section>
+
+
+
+    <!-- Section for the question card -->
+    <section>
+      <!-- Title for the question section -->
+      <h2 class="card-title">A little question for you</h2>
+      <!-- Question card with image, text, and buttons -->
+      <div class="question-card" style="margin-top:16px;background:#ffe6ef;padding:32px;border-radius:18px;box-shadow:0 10px 26px rgba(255,107,154,0.15);text-align:center;max-width:520px;margin-left:auto;margin-right:auto;">
+        <!-- Cute video -->
+        <video src="gif/gif1.mp4" alt="cute" style="width:140px;height:140px;object-fit:cover;border-radius:14px;margin-bottom:16px;" autoplay muted loop></video>
+        <!-- Main question -->
+        <div id="mainQuestion">
+          <!-- Question heading -->
+          <h3 style="margin:0;font-size:22px;color:#5a2b3a;font-weight:700;">DO you love me? 🥺</h3>
+          <!-- Subtitle -->
+          <p style="color:#8b6b7a;margin-top:6px;">~I'm is all yours</p>
+          <!-- Buttons for yes and no -->
+          <div style="margin-top:18px;display:flex;gap:16px;justify-content:center;">
+            <button class="yn-btn yes" style="padding:10px 20px;font-size:15px;border-radius:12px;border:0;background:white;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;">Yes</button>
+            <button class="yn-btn no" style="padding:10px 20px;font-size:15px;border-radius:12px;border:0;background:white;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;position:relative;">No</button>
+          </div>
+        </div>
+        <!-- Sub-question that appears when No is clicked first -->
+        <div id="subQuestion" style="display:none;margin-top:18px;">
+          <!-- Cute video -->
+          <video src="gif/gif2.mp4" alt="cute" style="width:140px;height:140px;object-fit:cover;border-radius:14px;margin-bottom:16px;" autoplay muted loop></video>
+          <h3 style="margin:0;font-size:22px;color:#5a2b3a;font-weight:700;">Please think again! 🙄</h3>
+          <!-- Subtitle -->
+          <p style="color:#8b6b7a;margin-top:6px;">itni jaldi nahi matt bolo😓</p>
+          <div style="margin-top:18px;display:flex;gap:16px;justify-content:center;">
+            <button class="yn-btn sub-yes" style="padding:10px 20px;font-size:15px;border-radius:12px;border:0;background:white;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;">Yes</button>
+            <button class="yn-btn sub-no" style="padding:10px 20px;font-size:15px;border-radius:12px;border:0;background:white;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;position:relative;">No</button>
+          </div>
+        </div>
+        <!-- Third sub-question that appears when sub-No is clicked -->
+        <div id="thirdQuestion" style="display:none;margin-top:18px;">
+          <!-- Cute video -->
+          <video src="gif/gif3.mp4" alt="cute" style="width:140px;height:140px;object-fit:cover;border-radius:14px;margin-bottom:16px;" autoplay muted loop></video>
+          <h3 style="margin:0;font-size:22px;color:#5a2b3a;font-weight:700;">Ek aur baar Soch lo!😣</h3>
+          <!-- Subtitle -->
+          <p style="color:#8b6b7a;margin-top:6px;">kyu aesa kar rahi ho😣</p>
+          <div style="margin-top:18px;display:flex;gap:16px;justify-content:center;">
+            <button class="yn-btn third-yes" style="padding:10px 20px;font-size:15px;border-radius:12px;border:0;background:white;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;">Yes</button>
+            <button class="yn-btn third-no" style="padding:10px 20px;font-size:15px;border-radius:12px;border:0;background:white;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;position:relative;">No</button>
+          </div>
+        </div>
+        <!-- Fourth sub-question that appears when third-No is clicked -->
+        <div id="fourthQuestion" style="display:none;margin-top:18px;">
+          <!-- Cute video -->
+          <video src="gif/gif4.mp4" alt="cute" style="width:140px;height:140px;object-fit:cover;border-radius:14px;margin-bottom:16px;" autoplay muted loop></video>
+          <h3 style="margin:0;font-size:22px;color:#5a2b3a;font-weight:700;">Baby Man jao na! Kitna bhav khaogi😭</h3>
+          <!-- Subtitle -->
+          <p style="color:#8b6b7a;margin-top:6px;">bhut galat baat hai yaar😭</p>
+          <div style="margin-top:18px;display:flex;gap:16px;justify-content:center;">
+            <button class="yn-btn fourth-yes" style="padding:10px 20px;font-size:15px;border-radius:12px;border:0;background:white;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;">Yes</button>
+            <button class="yn-btn fourth-no" style="padding:10px 20px;font-size:15px;border-radius:12px;border:0;background:white;box-shadow:0 6px 16px rgba(0,0,0,0.12);cursor:pointer;position:relative;">No</button>
+          </div>
+        </div>
+        <!-- Final message slide that appears when any Yes is clicked -->
+        <div id="finalMessage" style="display:none;margin-top:18px;">
+          <!-- Cute video -->
+          <video src="gif/gif5.mp4" alt="cute" style="width:140px;height:140px;object-fit:cover;border-radius:14px;margin-bottom:16px;" autoplay muted loop></video>
+          <h3 style="margin:0;font-size:22px;color:#5a2b3a;font-weight:700;">Hehehehehe I Knew it! Love you a lot 😘</h3>
+          <!-- Subtitle -->
+          <p style="color:#8b6b7a;margin-top:6px;">~I'm is all yours</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer with instructions--> 
+    <footer>
+      <p class="muted">Birthday Wishes from Dego....♥</p>
+    </footer>
+  </div> 
+
+  <!-- Modal for gallery image expansion -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="panel">
+      <div style="position:relative">
+        <!-- Close button for modal -->
+        <div class="close-x" id="closeModal">✕</div>
+        <!-- Image displayed in modal -->
+        <img id="modalImg" src="" alt="" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Inline JavaScript for interactivity -->
+  <script>
+    /***** Typing letter text *****/
+    // Text content for the typing animation
+    const letterText = `Heyyyyyy my loveeee ❤️
+I wish you many many happy returns of the day ❤️
+I can't believe that I have you in my life , my life would have been so empty if you were not here , i can't believe that it's been 2 years since we met that first bday of yours that white tee locket us in cafe and all 😭❤️
+Time flies but well today is your dayyyyyy my baby
+It's been 8,035 days, 192,840 hours, 11,570,400 minutes, and 694,224,000 seconds on this earthhhh and I still can't believe that I have you beside me , I love you so much you and your pandu may you achieve your goals, make your parents proud , stay healthy happy and prosperous
+May you and pandu stay happy healthy 😏😏😏😏 😒  on this this I wanna say that you are one of the strongest woman I seen in my life , I'm proud of you the way you carry yourself, your family your brother job clg  PANDU and chhotu su me !  ❤️
+On this I hope you'll find more and more success and happiness in your life 🧬
+I love so so so much baby gurl 😘❤️ I know there is a lot  on your plate but still you are standing tall and ready for the next thing , I'm so glad that I have you I wish you found the best version of yourself , and I will be always always there for you 💕❤️ no matter what you can count on me like one two three I'll be there and if it's double decker bus crashes into ussss to die by your side it's just a heavenly way to die ❤️there is light which never goes out but take my hand take my whole life too cuz I can't help falling in love with you , you are the only gurl I ever love only oneeee,
+❤️ ❤️ ❤️`;
+
+    // DOM elements for typing animation
+    const typedEl = document.getElementById('typed');
+    const cursorEl = document.getElementById('cursor');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const replayBtn = document.getElementById('replayBtn');
+
+    // Variables for typing state
+    let idx = 0, speed = 28, typing = false, paused = false, tID = null;
+
+    // Function to handle typing animation tick
+    function typeTick(){
+      if(paused) return;
+      if(idx <= letterText.length){
+        typedEl.textContent = letterText.slice(0, idx);
+        idx++;
+        tID = setTimeout(typeTick, speed);
+      }else{
+        cursorEl.style.display = 'none';
+      }
+    }
+
+    // Event listeners for control buttons
+    startBtn.addEventListener('click', ()=>{
+      if(typing) return; typing = true; paused = false; cursorEl.style.display = 'inline-block'; typeTick();
+    });
+    pauseBtn.addEventListener('click', ()=>{
+      paused = !paused;
+      pauseBtn.textContent = paused? 'Resume' : 'Pause';
+      if(!paused) typeTick();
+    });
+    replayBtn.addEventListener('click', ()=>{
+      clearTimeout(tID); idx = 0; typing = false; paused = false; typedEl.textContent=''; cursorEl.style.display='inline-block'; startBtn.click();
+    });
+
+
+
+    /***** Floating hearts randomizer *****/
+    // Container for hearts
+    const hearts = document.querySelector('.hearts');
+    // Function to create and animate a heart
+    function makeHeart(){
+      const h = document.createElement('div'); h.className='heart';
+      const size = 10 + Math.random()*28; h.style.width = size+'px'; h.style.height = size+'px';
+      h.style.left = Math.random()*100+'%'; h.style.top = (60 + Math.random()*30)+'%';
+      h.style.opacity = 0.8+Math.random()*0.2;
+      hearts.appendChild(h);
+      const duration = 5000 + Math.random()*6000;
+      h.animate([
+        {transform:`translateY(0) scale(0.6) rotate(${Math.random()*30}deg)`, opacity:h.style.opacity},
+        {transform:`translateY(-420px) scale(1) rotate(${Math.random()*200}deg)`, opacity:0}
+      ],{duration:duration, easing:'ease-out'}).onfinish = ()=>h.remove();
+    }
+    // Create hearts at intervals
+    setInterval(makeHeart,800);
+
+    /***** Gallery behavior *****/
+    // Function to open modal with image
+    function openModal(src){
+      document.getElementById('modalImg').src = src;
+      document.getElementById('modal').classList.add('open');
+    }
+    // Event listeners for modal close
+    document.getElementById('closeModal').addEventListener('click', ()=>document.getElementById('modal').classList.remove('open'));
+    document.getElementById('modal').addEventListener('click', (e)=>{ if(e.target.id==='modal') document.getElementById('modal').classList.remove('open')});
+
+    // Event listeners for gallery images - disabled to prevent modal opening
+    // document.querySelectorAll('[data-full]').forEach(img => {
+    //   img.addEventListener('click', ()=> openModal(img.dataset.full || img.src));
+    // });
+
+    // Side gallery preview - disabled to prevent modal opening
+    // document.getElementById('sideGallery').addEventListener('click',(e)=>{
+    //   if(e.target.tagName==='IMG'){
+    //     document.getElementById('mainThumb').src = e.target.dataset.full || e.target.src;
+    //     openModal(e.target.dataset.full || e.target.src);
+    //   }
+    // });
+
+
+
+    /***** Small accessibility tweaks *****/
+    // Close modal with ESC key
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') document.getElementById('modal').classList.remove('open') });
+      
+    /* ---- Extra Cute Interactions for Question Card ---- */
+    // Elements for question card
+    const yesBtn = document.querySelector('.yn-btn.yes');
+    const noBtn = document.querySelector('.yn-btn.no');
+    const subQuestion = document.getElementById('subQuestion');
+    const subYesBtn = document.querySelector('.yn-btn.sub-yes');
+    const subNoBtn = document.querySelector('.yn-btn.sub-no');
+    const thirdQuestion = document.getElementById('thirdQuestion');
+    const thirdYesBtn = document.querySelector('.yn-btn.third-yes');
+    const thirdNoBtn = document.querySelector('.yn-btn.third-no');
+    const fourthQuestion = document.getElementById('fourthQuestion');
+    const fourthYesBtn = document.querySelector('.yn-btn.fourth-yes');
+    const fourthNoBtn = document.querySelector('.yn-btn.fourth-no');
+    const finalMessage = document.getElementById('finalMessage');
+    const qCard = document.querySelector('.question-card');
+
+    // Track if No was clicked first
+    let noClickedFirst = false;
+    let subNoClicked = false;
+    let thirdNoClicked = false;
+
+
+
+    // Main NO button click - show sub-question and disable movement
+    noBtn.addEventListener('click', () => {
+      if (!noClickedFirst) {
+        noClickedFirst = true;
+        const mainVideo = document.querySelector('.question-card video');
+        if (mainVideo) mainVideo.remove();
+        document.getElementById('mainQuestion').style.display = 'none';
+        subQuestion.style.display = 'block';
+        noBtn.style.transform = 'none'; // Stop movement
+        noBtn.style.pointerEvents = 'none'; // Disable further clicks
+      }
+    });
+
+    // Sub-question YES button - show final message and burst hearts
+    subYesBtn.addEventListener('click', () => {
+      document.getElementById('mainQuestion').style.display = 'none';
+      subQuestion.style.display = 'none';
+      thirdQuestion.style.display = 'none';
+      fourthQuestion.style.display = 'none';
+      finalMessage.style.display = 'block';
+      makeBurstHearts();
+    });
+
+    // Sub-question NO button - show third question
+    subNoBtn.addEventListener('click', () => {
+      if (!subNoClicked) {
+        subNoClicked = true;
+        subQuestion.style.display = 'none';
+        thirdQuestion.style.display = 'block';
+        subNoBtn.style.pointerEvents = 'none'; // Disable further clicks
+      }
+    });
+
+    // Third-question YES button - show final message and burst hearts
+    thirdYesBtn.addEventListener('click', () => {
+      document.getElementById('mainQuestion').style.display = 'none';
+      subQuestion.style.display = 'none';
+      thirdQuestion.style.display = 'none';
+      fourthQuestion.style.display = 'none';
+      finalMessage.style.display = 'block';
+      makeBurstHearts();
+    });
+
+    // Third-question NO button - show fourth question
+    thirdNoBtn.addEventListener('click', () => {
+      if (!thirdNoClicked) {
+        thirdNoClicked = true;
+        thirdQuestion.style.display = 'none';
+        fourthQuestion.style.display = 'block';
+        thirdNoBtn.style.pointerEvents = 'none'; // Disable further clicks
+      }
+    });
+
+    // Fourth-question YES button - show final message and burst hearts
+    fourthYesBtn.addEventListener('click', () => {
+      document.getElementById('mainQuestion').style.display = 'none';
+      subQuestion.style.display = 'none';
+      thirdQuestion.style.display = 'none';
+      fourthQuestion.style.display = 'none';
+      finalMessage.style.display = 'block';
+      makeBurstHearts();
+    });
+
+    // Fourth-question NO button - runs away
+    fourthNoBtn.addEventListener('mouseover', () => {
+      const x = Math.random() * 200 - 100;
+      const y = Math.random() * 120 - 60;
+      fourthNoBtn.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    // Main YES button shows final message and burst hearts
+    yesBtn.addEventListener('click', () => {
+      const mainVideo = document.querySelector('#mainQuestion video');
+      if (mainVideo) mainVideo.remove();
+      document.getElementById('mainQuestion').style.display = 'none';
+      subQuestion.style.display = 'none';
+      thirdQuestion.style.display = 'none';
+      fourthQuestion.style.display = 'none';
+      finalMessage.style.display = 'block';
+      makeBurstHearts();
+    });
+
+    // Function to create burst of hearts
+    function makeBurstHearts(){
+      for(let i=0;i<16;i++){
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.style.position = 'absolute';
+        h.style.left = '50%';
+        h.style.top = '50%';
+        h.style.transform = 'translate(-50%, -50%)';
+        qCard.appendChild(h);
+        const ang = Math.random()*360;
+        const dist = 80 + Math.random()*80;
+        h.animate([
+          {transform:`translate(-50%, -50%) rotate(${ang}deg) translate(0,0) scale(0.6)`, opacity:1},
+          {transform:`translate(-50%, -50%) rotate(${ang}deg) translate(${dist}px,0) scale(1)`, opacity:0}
+        ],{duration:1000, easing:'ease-out'}).onfinish = ()=>h.remove();
+      }
+    }
+
+    /***** Ribbon Animation *****/
+    // Ribbon click to reveal the site
+    const ribbon = document.getElementById('ribbon');
+    const container = document.querySelector('.container');
+    ribbon.addEventListener('click', () => {
+      ribbon.classList.add('hidden');
+      container.classList.add('visible');
+    });
+
+  </script>
+</body>
+</html>
